@@ -227,3 +227,4 @@ FakesAssemblies/
 *.Debug
 *.Release
 *.exe
+mms.zip
