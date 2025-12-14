@@ -233,6 +233,9 @@ class Window : public QMainWindow {
   bool isWithinMaze(int x, int y) const;
   Wall getOpposingWall(Wall wall) const;
   Coordinate getCoordinate(SemiPosition semiPos) const;
+
+  void togglePause() const;
+
 };
 
-}  // namespace mms
+} // namespace mms

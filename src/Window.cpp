@@ -32,7 +32,10 @@
 #include "SimUtilities.h"
 #include "Window.h"
 
-namespace mms {
+namespace mms 
+{
+
+
 
 const QString Window::IN_PROGRESS_STYLE_SHEET =
     "QLabel { background: rgb(255, 255, 100); }";
@@ -1027,7 +1030,7 @@ QString Window::executeCommand(QString command) {
       function != "wallFront" && function != "wallBack" &&
       function != "wallLeft" && function != "wallRight" &&
       function != "wallFrontRight" && function != "wallFrontLeft" &&
-      function != "wallBackRight" && function != "wallBackLeft") {
+      function != "wallBackRight" && function != "wallBackLeft" && function != "togglePause") {
     return INVALID;
   }
   if (function == "mazeWidth") {
@@ -1164,7 +1167,12 @@ QString Window::executeCommand(QString command) {
       return "-1";
     }
     return statValue;
-  } else {
+  } 
+  else if (function == "togglePause") {
+     onPauseButtonPressed();
+    return "-1";
+  }
+  else {
     return INVALID;
   }
 }
@@ -1182,6 +1190,8 @@ void Window::processQueuedCommands() {
         }
       }
     } else {
+      //i created this
+      QString x = m_commandQueue[0];
       response = executeCommand(m_commandQueue.head());
     }
     if (!response.isEmpty()) {
@@ -1747,5 +1757,12 @@ Coordinate Window::getCoordinate(SemiPosition semiPos) const {
       Dimensions::halfTileLength() * static_cast<double>(semiPos.y));
   return coordinate;
 }
+
+void Window::togglePause() const {
+
+  
+  return ;
+}
+
 
 }  // namespace mms
