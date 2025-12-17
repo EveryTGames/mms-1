@@ -7,7 +7,7 @@
                 "/home/etms/my_disk/New_Volume/QT/6.10.1/gcc_64/include/**"
             ],
             "defines": [],
-            "compilerPath": "/usr/bin/clang",
+            "compilerPath": "C:/msys64/mingw64/bin/gcc.exe",
             "cStandard": "c17",
             "cppStandard": "c++17",
             "intelliSenseMode": "linux-clang-x64"

@@ -228,3 +228,5 @@ FakesAssemblies/
 *.Release
 *.exe
 mms.zip
+src/.vscode/c_cpp_properties.json
+src/.vscode/c_cpp_properties.json
