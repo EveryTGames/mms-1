@@ -4,13 +4,13 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
-                "/home/etms/my_disk/New_Volume/QT/6.10.1/gcc_64/include/**"
+                "D:\\QTwindows\\6.10.1\\mingw_64\\include\\**"
             ],
             "defines": [],
             "compilerPath": "C:/msys64/mingw64/bin/gcc.exe",
             "cStandard": "c17",
             "cppStandard": "c++17",
-            "intelliSenseMode": "linux-clang-x64"
+            "intelliSenseMode": "windows-gcc-x64"
         }
     ],
     "version": 4
