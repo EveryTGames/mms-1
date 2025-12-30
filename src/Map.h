@@ -12,6 +12,7 @@
 #include "Maze.h"
 #include "MazeView.h"
 #include "MouseGraphic.h"
+#include "CheeseGraphic.h"
 #include "TriangleGraphic.h"
 
 namespace mms {
@@ -28,6 +29,7 @@ class Map : public QOpenGLWidget, protected QOpenGLFunctions {
   void setMaze(const Maze *maze);
   void setView(const MazeView *view);
   void setMouseGraphic(const MouseGraphic *mouseGraphic);
+  void setCheeseGraphic(const CheeseGraphic *cheeseGraphic);
 
   // Retrieves OpenGL version info
   QStringList getOpenGLVersionInfo();
@@ -52,6 +54,7 @@ class Map : public QOpenGLWidget, protected QOpenGLFunctions {
   const Maze *m_maze;
   const MazeView *m_view;
   const MouseGraphic *m_mouseGraphic;
+  const CheeseGraphic *m_cheeseGraphic;
 
   // The map's window size, in pixels
   int m_windowWidth;
@@ -74,7 +77,8 @@ class Map : public QOpenGLWidget, protected QOpenGLFunctions {
 
   // Drawing helper methods
   void repopulateVertexBufferObjects(
-      const QVector<TriangleGraphic> &mouseBuffer);
+      const QVector<TriangleGraphic> &mouseBuffer,
+      const QVector<TriangleGraphic> &cheeseBuffer);
   void drawMap(QOpenGLShaderProgram *program, QOpenGLVertexArrayObject *vao,
                int vboStartingIndex, int count);
 };

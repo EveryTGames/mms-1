@@ -20,6 +20,7 @@
 #include "MazeView.h"
 #include "Mouse.h"
 #include "MouseGraphic.h"
+#include "CheeseGraphic.h"
 #include "Stats.h"
 
 namespace mms {
@@ -121,6 +122,7 @@ class Window : public QMainWindow {
   Mouse *m_mouse;
   MazeView *m_view;
   MouseGraphic *m_mouseGraphic;
+  CheeseGraphic *m_cheeseGraphic;
 
   void removeMouseFromMaze();
 
@@ -217,6 +219,8 @@ class Window : public QMainWindow {
   void setText(int x, int y, QString text);
   void clearText(int x, int y);
   void clearAllText();
+
+  void setCheesePosition(int x, int y);
 
   bool wasReset();
   void ackReset();

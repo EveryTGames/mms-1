@@ -16,6 +16,7 @@ Map::Map(QWidget *parent)
       m_maze(nullptr),
       m_view(nullptr),
       m_mouseGraphic(nullptr),
+      m_cheeseGraphic(nullptr),
       m_windowWidth(0),
       m_windowHeight(0),
       m_textureAtlas(nullptr) {
@@ -41,6 +42,14 @@ void Map::setMouseGraphic(const MouseGraphic *mouseGraphic) {
     ASSERT_FA(m_view == nullptr);
   }
   m_mouseGraphic = mouseGraphic;
+}
+
+void Map::setCheeseGraphic(const CheeseGraphic *cheeseGraphic) {
+  if (cheeseGraphic != nullptr) {
+    ASSERT_FA(m_maze == nullptr);
+    ASSERT_FA(m_view == nullptr);
+  }
+  m_cheeseGraphic = cheeseGraphic;
 }
 
 QStringList Map::getOpenGLVersionInfo() {
@@ -119,8 +128,13 @@ void Map::paintGL() {
     mouseBuffer = m_mouseGraphic->draw();
   }
 
+  QVector<TriangleGraphic> cheeseBuffer;
+  if (m_cheeseGraphic != nullptr) {
+    cheeseBuffer = m_cheeseGraphic->draw();
+  }
+
   // Re-populate both vertex buffer objects
-  repopulateVertexBufferObjects(mouseBuffer);
+  repopulateVertexBufferObjects(mouseBuffer, cheeseBuffer);
 
   // Draw the tiles
   drawMap(&m_polygonProgram, &m_polygonVAO, 0,
@@ -135,6 +149,10 @@ void Map::paintGL() {
   // Draw the mouse
   drawMap(&m_polygonProgram, &m_polygonVAO,
           3 * m_view->getGraphicCpuBuffer()->size(), 3 * mouseBuffer.size());
+
+  // Draw the cheese
+  drawMap(&m_polygonProgram, &m_polygonVAO,
+          3 * (m_view->getGraphicCpuBuffer()->size() + mouseBuffer.size()), 3 * cheeseBuffer.size());
 
   // TODO: upforgrabs
   // Optimize this code
@@ -262,12 +280,13 @@ void Map::initTextureProgram() {
 }
 
 void Map::repopulateVertexBufferObjects(
-    const QVector<TriangleGraphic> &mouseBuffer) {
+    const QVector<TriangleGraphic> &mouseBuffer,
+    const QVector<TriangleGraphic> &cheeseBuffer) {
   // Overwrite the polygon vertex buffer object data
   m_polygonVBO.bind();
   m_polygonVBO.allocate(
       sizeof(TriangleGraphic) *
-      (m_view->getGraphicCpuBuffer()->size() + mouseBuffer.size()));
+      (m_view->getGraphicCpuBuffer()->size() + mouseBuffer.size() + cheeseBuffer.size()));
   // Write the maze
   m_polygonVBO.write(
       0, &(m_view->getGraphicCpuBuffer()->front()),
@@ -277,6 +296,12 @@ void Map::repopulateVertexBufferObjects(
     m_polygonVBO.write(
         sizeof(TriangleGraphic) * m_view->getGraphicCpuBuffer()->size(),
         &(mouseBuffer.front()), sizeof(TriangleGraphic) * mouseBuffer.size());
+  }
+  // Write the cheese
+  if (!cheeseBuffer.isEmpty()) {
+    m_polygonVBO.write(
+        sizeof(TriangleGraphic) * (m_view->getGraphicCpuBuffer()->size() + mouseBuffer.size()),
+        &(cheeseBuffer.front()), sizeof(TriangleGraphic) * cheeseBuffer.size());
   }
   m_polygonVBO.release();
 

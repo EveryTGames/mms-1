@@ -17,6 +17,7 @@
         <file>resources/mazes/example3.num</file>
         <file>resources/mazes/example4.num</file>
         <file>resources/mazes/example5.num</file>
+        <file>resources/icons/cheese.png</file>
         <file>resources/icons/theMouse.png</file>
     </qresource>
 </RCC>

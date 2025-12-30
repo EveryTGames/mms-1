@@ -93,6 +93,7 @@ Window::Window(QWidget *parent)
       m_mouse(nullptr),
       m_view(nullptr),
       m_mouseGraphic(nullptr),
+      m_cheeseGraphic(nullptr),
 
       // Pause/reset
       m_isPaused(false),
@@ -659,8 +660,16 @@ void Window::startRun() {
   m_mouse = new Mouse();
   m_view = new MazeView(m_maze, false);
   m_mouseGraphic = new MouseGraphic(m_mouse);
+  
+  // Create cheese at default position (0,0) - will be updated by setCheese command
+  Coordinate cheesePos = Coordinate::Cartesian(
+      Dimensions::halfTileLength() * 0.0,
+      Dimensions::halfTileLength() * 0.0);
+  m_cheeseGraphic = new CheeseGraphic(cheesePos);
+  
   m_map->setView(m_view);
   m_map->setMouseGraphic(m_mouseGraphic);
+  m_map->setCheeseGraphic(m_cheeseGraphic);
 
   // Instantiate a new process
   QProcess *process = new QProcess();
@@ -781,16 +790,20 @@ void Window::removeMouseFromMaze() {
   // Update some objects
   m_map->setView(m_truth);
   m_map->setMouseGraphic(nullptr);
+  m_map->setCheeseGraphic(nullptr);
 
   // Delete some objects
   ASSERT_FA(m_view == nullptr);
   ASSERT_FA(m_mouseGraphic == nullptr);
+  ASSERT_FA(m_cheeseGraphic == nullptr);
   delete m_mouse;
   m_mouse = nullptr;
   delete m_view;
   m_view = nullptr;
   delete m_mouseGraphic;
   m_mouseGraphic = nullptr;
+  delete m_cheeseGraphic;
+  m_cheeseGraphic = nullptr;
 
   // Reset communication state
   m_logBuffer.clear();
@@ -1007,6 +1020,27 @@ bool Window::dispatchCommand(QString command) {
       return false;
     }
     clearAllText();
+    return true;
+  }
+
+  if (command.startsWith("setCheese")) {
+    QStringList tokens = command.split(" ", Qt::SkipEmptyParts);
+    if (tokens.size() != 3) {
+      return false;
+    }
+    if (tokens.at(0) != "setCheese") {
+      return false;
+    }
+    bool ok = true;
+    int x = tokens.at(1).toInt(&ok);
+    if (!ok) {
+      return false;
+    }
+    int y = tokens.at(2).toInt(&ok);
+    if (!ok) {
+      return false;
+    }
+    setCheesePosition(x, y);
     return true;
   }
 
@@ -1762,6 +1796,26 @@ void Window::togglePause() const {
 
   
   return ;
+}
+
+void Window::setCheesePosition(int x, int y) {
+  if (m_cheeseGraphic == nullptr) {
+    return;
+  }
+  
+  // Convert tile coordinates to world coordinates
+  Coordinate cheesePos = Coordinate::Cartesian(
+      Dimensions::halfTileLength() * (static_cast<double>(x) *2+1.0),
+      Dimensions::halfTileLength() * (static_cast<double>(y) *2+1.0)
+    );
+  
+  // Update the cheese graphic position by recreating it
+  delete m_cheeseGraphic;
+  m_cheeseGraphic = new CheeseGraphic(cheesePos);
+  m_map->setCheeseGraphic(m_cheeseGraphic);
+  
+  // Trigger a repaint
+  m_map->update();
 }
 
 
